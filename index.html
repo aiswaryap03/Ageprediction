@@ -18,16 +18,16 @@
 <body>
     <section>
         <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-            <div class="card" style="width: 45rem; height: 35rem; box-shadow: 5px 6px 7px rgb(82, 78, 78);">
+            <div class="card" style="width: 40rem; height: 35rem; box-shadow: 5px 6px 7px rgb(82, 78, 78); background-color: beige;">
                 <div class="card-body">
                     <h5 class="card-title text-center py-5" style="font-size: xx-large;">Advanced Age Calculator</h5>
                     <input id="name" type="text" placeholder="Enter the name"
-                        style="width: 650px; background-color: rgba(74, 158, 236, 0.732);">
+                        style="width: 590px; background-color: rgba(149, 194, 237, 0.732);">
                     <br><br>
-                    <input id="dob" type="date" style="width: 650px; background-color: rgba(74, 158, 236, 0.732);">
+                    <input id="dob" type="date" style="width: 590px; background-color: rgba(117, 160, 201, 0.732);">
                     <br><br>
                     <div class="d-flex justify-content-center align-items-center">
-                        <button class="btn btn-success" onclick="calculateage()">Calculate Age</button>
+                        <button class="btn btn-success" onclick="calculateAge()">Calculate Age</button>
                     </div>
                     <div id="result">
                        
@@ -43,29 +43,50 @@
     </section>
 
     <script>
-    function calculateage(Currentyear)
-    {
-       var doc = document.getElementById('name').value
-        var dob = document.getElementById('dob').value
-       
-        var dobc = new Date(dob)
-        var today = new Date()
+    function calculateAge() {
+      var name = document.getElementById('name').value;
+      var dobStr = document.getElementById('dob').value;
+      if (!name || !dobStr) {
+        document.getElementById('result').innerHTML = "<span style='color:red;'>Please enter both name and date of birth.</span>";
+        return;
+      }
 
-        var year = today.getFullYear()-dob.getFullYear();
-        var months = today.getMonth()-dob.getMonth();
-        var day = today.getDate()-dob.getDate();
+      var dob = new Date(dobStr);
+      var today = new Date();
 
-        
-       result.innerHTML = `<h5 class="text-center py-3" style="font-size-bold">hello ${doc}</h5>`
-      
-       
-       
-      
-        
+      // Calculate age in years, months, days
+      var years = today.getFullYear() - dob.getFullYear();
+      var months = today.getMonth() - dob.getMonth();
+      var days = today.getDate() - dob.getDate();
+
+      if (days < 0) {
+        months--;
+        days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      // Day of the week
+      var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      var birthDay = daysOfWeek[dob.getDay()];
+
+      // Days until next birthday
+      var nextBirthday = new Date(today.getFullYear(), dob.getMonth(), dob.getDate());
+      if (today > nextBirthday) nextBirthday.setFullYear(today.getFullYear() + 1);
+      var diff = nextBirthday - today;
+      var daysToNextBirthday = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+      // Display result
+      document.getElementById('result').innerHTML = `
+        <strong>Hello ${name}!</strong><br>
+        🎂 You are <b>${years} years, ${months} months, ${days} days</b> old.<br>
+        🗓️ You were born on a <b>${birthDay}</b>.<br>
+        ⏳ Your next birthday is in <b>${daysToNextBirthday} days</b>.
+      `;
     }
-    
-
-    </script>
+  </script>
 </body>
 
 </html>
